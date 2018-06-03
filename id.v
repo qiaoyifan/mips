@@ -173,7 +173,7 @@ always @ (*) begin
             //运算类型是逻辑运算   
 			//alusel_o<=  `EXE_RES_LOGIC;
             if(reg1_data_i == reg2_data_i)
-				branch_addr <= {16'h0, inst_i[15:0]};
+				branch_addr <= pc_i + {14'b0, inst_i[15:0],2'b0};
             //ori指令有效
             //instvalid   <=  `InstValid;
             end
@@ -185,7 +185,7 @@ always @ (*) begin
             //运算类型是逻辑运算   
 			//alusel_o<=  `EXE_RES_LOGIC;
             if(reg1_data_i != reg2_data_i)
-				branch_addr <= {16'h0, inst_i[15:0]};
+				branch_addr <= pc_i + {14'b0, inst_i[15:0],2'b0};
             //ori指令有效
             //instvalid   <=  `InstValid;
             end
