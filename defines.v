@@ -6,6 +6,10 @@
 `define ReadDisable 1'b0        //读除能
 `define InstValid 1'b0          //指令有效
 `define InstInvalid 1'b1        //指令无效
+//
+`define JumpEnable 1'b1         //跳转使能
+`define JumpDisable 1'b0        //跳转除能
+//
 `define ChipEnable 1'b1         //芯片使能
 `define ChipDisable 1'b0        //芯片禁止
 `define ZeroWord 32'h00000000   //32位数字0
@@ -20,6 +24,8 @@
 `define EXE_BEQ   6'b000100     //指令beq的指令码
 `define EXE_BNE   6'b000101     //指令bne的指令码
 `define EXE_LUI   6'b001111     //指令lui的指令码
+`define EXE_J     6'b000010     //指令j的指令码
+`define EXE_JAL   6'b000011     //指令jal的指令码
 
 //AluOp
 `define EXE_OR_OP 6'b100101

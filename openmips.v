@@ -34,9 +34,15 @@ wire[`RegBus] ex_wdata;
 wire[`RegAddrBus] wb_wd;
 wire wb_wreg;
 wire[`RegBus] wb_wdata;
+
+//连接ID模块和PC模块
+wire branch_flag;
+wire [`InstAddrBus]  branch_addr;
 //pc_reg real
 pc_reg pc_reg0(
-    .clk(clk),  .rst(rst),  .pc(rom_addr_o),    .ce(rom_ce_o)
+    .clk(clk),  .rst(rst),  .pc(rom_addr_o),    .ce(rom_ce_o),
+	//来自ID模块的输入
+	.branch_addr(branch_addr),  .branch_flag(branch_flag)
 );
 //ID real
 id id0(

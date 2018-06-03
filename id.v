@@ -23,7 +23,12 @@ module id(
     output reg[`RegBus]            reg1_o,
     output reg[`RegBus]            reg2_o,
     output reg[`RegAddrBus]        wd_o,
-    output reg                     wreg_o
+    output reg                     wreg_o,
+	
+	//输出到PC阶段，用来实现J型指令
+	output reg [`InstAddrBus]     branch_addr,
+	//跳转使能
+	output reg                    branch_flag
 );
 //取得的指令码功能码
 wire[5:0] op = inst_i[31:26];
@@ -140,6 +145,69 @@ always @ (*) begin
             instvalid   <=  `InstValid;
             end
 			
+			`EXE_LUI:   begin   //判断是lui的指令码
+            //lui指令需要将结果写入目的寄存器，则输出写入信号使能
+            wreg_o  <=  `WriteEnable;
+            //运算的子类型是逻辑“左移”运算
+            aluop_o <=  `EXE_OR_OP;
+            //运算类型是逻辑运算   
+            alusel_o<=  `EXE_RES_LOGIC;
+            //需要通过Regfile的读端口1读寄存器
+            reg1_read_o <= 1'b0;
+            //需要通过Regfile的读端口2读寄存器
+            reg2_read_o <= 1'b1;
+            //指令执行需要的立即数
+			//在此直接使用拼接操作，然后与rt或，避免移位操作
+            imm <=  {inst_i[15:0],16'h0};
+            //指令执行要写的目的寄存器
+            wd_o <= inst_i[20:16];
+            //lui指令有效
+            instvalid   <=  `InstValid;
+            end
+			
+			
+			`EXE_BEQ:   begin   //判断是beq的指令码
+            //beq指令需要将结果写入pc，则branch_flag信号使能
+            branch_flag  <=  `JumpEnable;
+            //此处不需要ALU进行操作
+            //运算类型是逻辑运算   
+			//alusel_o<=  `EXE_RES_LOGIC;
+            if(reg1_data_i == reg2_data_i)
+				branch_addr <= {16'h0, inst_i[15:0]};
+            //ori指令有效
+            //instvalid   <=  `InstValid;
+            end
+			
+			`EXE_BNE:   begin   //判断是bne的指令码
+            //beq指令需要将结果写入pc，则branch_flag信号使能
+            branch_flag  <=  `JumpEnable;
+            //此处不需要ALU进行操作
+            //运算类型是逻辑运算   
+			//alusel_o<=  `EXE_RES_LOGIC;
+            if(reg1_data_i != reg2_data_i)
+				branch_addr <= {16'h0, inst_i[15:0]};
+            //ori指令有效
+            //instvalid   <=  `InstValid;
+            end
+			
+			`EXE_J:   begin   //判断是j的指令码
+            //beq指令需要将结果写入pc，则branch_flag信号使能
+            branch_flag  <=  `JumpEnable;
+            //此处不需要ALU进行操作
+            //运算类型是逻辑运算   
+			//alusel_o<=  `EXE_RES_LOGIC;
+            /*
+			 Actually, j doesn't quite manage a 32-bit address: 
+			 The top 4 address bits of the target are not defined 
+			 by the instruction, and thetop 4 bits of the current 
+			 PC value are used instead. Most of the time this 
+			 doesn't matter; 28 bits still gives a maximum code size of 256 MB.
+			*/
+			//最后两位为0，中间26为是address，前四位用当前PC值填充
+			branch_addr <= {pc_i[31:28], inst_i[25:0],2'b00};
+            end
+			
+			
 			6'b000000: begin
 			  case(op3)
 			    `EXE_ADD_OP:  begin    //判断是ADD指令
@@ -246,6 +314,7 @@ always @ (*) begin
 				//add指令有效
 				instvalid   <=  `InstValid;
 				end
+				
 				
 			  endcase //case op3
 			end
