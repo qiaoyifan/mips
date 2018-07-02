@@ -11,7 +11,7 @@ initial begin
     CLOCK_50 = 1'b0;
     rst = `RstEnable;
     #195 rst= `RstDisable;
-    #1000 $finish;
+    #5000 $finish;
 end
 
 always #10 CLOCK_50=~CLOCK_50;
