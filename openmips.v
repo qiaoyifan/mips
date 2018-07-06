@@ -10,7 +10,21 @@ module openmips(
 
     input wire[`RegBus]         rom_data_i,
     output wire[`RegBus]        rom_addr_o,
-    output wire                 rom_ce_o
+    output wire                 rom_ce_o,
+	
+	input wire[`RegBus]  ram_data_i,
+	output wire[`RegBus] ram_addr_o,
+	output wire[`RegBus] ram_data_o,
+	output wire  ram_we_o,
+	output wire[3:0] ram_sel_o,
+	output wire  ram_ce_o,
+	
+	input wire[`RegBus]  io_data_i,
+	output wire[`RegBus] io_addr_o,
+	output wire[`RegBus] io_data_o,
+	output wire  io_we_o,
+	output wire  io_ce_o
+	
 );
 //连接ID模块和EX模块
 wire[`AluOpBus]   id_aluop;
@@ -72,7 +86,7 @@ wire[`RegBus] wdata;
 wire[`RegBus] rdata;
 
 //连接IO与板子
-wire[`RegBus] Button;
+//wire[`RegBus] Button;
 
 
 //连接MIOC与DataMem Ram
@@ -96,30 +110,30 @@ mioc mioc0(
 	.rm_idata(rm_idata),
 	
 	//来自dataMem的输入
-	.rmemdata_i(rme_idata),
+	.rmemdata_i(ram_data_i),
 	
 	//送到mem的输出
-	.wrmemdata_o(wdata_o),
-    .memaddr_o(mem_addr),            
-    .memwenb_o(mem_we),
-    .mem_ce(mem_ce),
-    .mem_sel_o(mem_sel),
+	.wrmemdata_o(ram_data_o),
+    .memaddr_o(ram_addr_o),            
+    .memwenb_o(ram_we_o),
+    .mem_ce(ram_ce_o),
+    .mem_sel_o(ram_sel_o),
 			  
 	//来自IO的输入
-	.wiodata_i(rdata),
+	.wiodata_i(io_data_i),
 	
 	//送到IO模块的输出		  
-	.wiodata(wdata),
-	.iowenb_o(io_iow),
-    .io_ce(io_ce),
-    .ioaddr(io_addr)
+	.wiodata(io_data_o),
+	.iowenb_o(io_we_o),
+    .io_ce(io_ce_o),
+    .ioaddr(io_addr_o)
 );
 //连接外设
-wire[`RegBus] Seg; //0xFFFFF000
-wire[15:0] Led; //0xFFFFF004
-wire[1:0] Sel; //0xFFFFF008
+//wire[`RegBus] Seg; //0xFFFFF000
+//wire[15:0] Led; //0xFFFFF004
+//wire[1:0] Sel; //0xFFFFF008
 
-
+/*
 io io0(
 	
 	.clk(clk),
@@ -140,6 +154,7 @@ io io0(
     .Sel(Sel), //0xFFFFF008
     .Button(Button) //0xFFFFF012	
 );
+*/
 
 //pc_reg real
 pc_reg pc_reg0(
@@ -215,15 +230,6 @@ wb wb0(
 	.mr(mr),
 	.rm_idata(rm_idata)
 );
-
-ram ram0(
-   .clk(clk),
-   .ce(mem_ce),
-   .we(mem_we),
-   .addr(mem_addr),
-   .wdata(wdata_o),
-   .sel(mem_sel),
-   .rdata(rme_idata)
-);      
+ 
 
 endmodule

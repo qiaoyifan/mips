@@ -14,7 +14,7 @@
 `define EXE_ORI   6'b001101      //指令ori的指令码
 `define EXE_ADDI  6'b001000      //指令addi的指令码
 `define EXE_ANDI  6'b001100      //指令andi的指令码
-`define EXE_XORI  6'b001110      //指令xori的指令�
+`define EXE_XORI  6'b001110      //指令xori的指令码
 `define EXE_LUI   6'b001111
 `define EXE_BEQ   6'b000100       //指令beq的指令码
 `define EXE_BNE   6'b000101       //指令bne的指令码
@@ -58,6 +58,13 @@
 `define NOPRegAddr 5'b00000     //空操作使用的寄存器地址
 `define RegNum 32               //通用寄存器的数量
 `define RegNumLog2 5            //寻址通用寄存器使用的地址位数
+
+`define DataAddrBus         31:0
+`define DataBus             31:0
+`define ByteWidth           7:0
+`define DataMemNum          511
+`define DataMemNumLog2      10
+
 
 `define SEG 32'hFFFFF000
 `define LED	32'hFFFFF004

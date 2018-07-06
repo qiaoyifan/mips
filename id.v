@@ -27,7 +27,7 @@ module id(
     output reg                     wreg_o,  //是否写寄存器
     output reg[`RegBus]            reg2_oo,
 	  //输出到PC部分
-   	output reg                     PCSrc,
+   	output reg                       PCSrc,
 	  output reg                     PCWre,
 	  output reg[`RegBus]            branch_addr,
 	
@@ -87,9 +87,9 @@ always @ (*) begin
         reg2_addr_o <=  inst_i[20:16];  //默认第二个操作寄存器为端口2读取的寄存器
         imm         <=  `ZeroWord;    
 	*/
-	        i_add  = 0;
-          i_and  = 0;
-          i_sub  = 0;
+	            i_add  = 0;
+                i_and  = 0;
+                i_sub  = 0;
 			    i_or   = 0;
 			    i_xor  = 0;
 			
@@ -99,14 +99,14 @@ always @ (*) begin
 			
 			    i_andi = 0;
 			    i_addi = 0;
-          i_ori  = 0;
-          i_xori = 0;
-          i_lui  = 0;
+                i_ori  = 0;
+                i_xori = 0;
+                i_lui  = 0;
             
-            //i_move <= 0;
-          i_sw   = 0;
-          i_lw   = 0;
-          i_beq  = 0;
+                //i_move <= 0;
+                i_sw   = 0;
+                i_lw   = 0;
+                i_beq  = 0;
 			    i_bne  = 0;
 			    i_j    = 0;
 			    i_jr   = 0;
@@ -125,15 +125,15 @@ always @ (*) begin
 			  `EXE_J  :  begin i_j    = 1; branch_addr = {pc_i[31:28],instruction[25:0],2'b00}; end
 			  `EXE_JAL:  begin i_jal  = 1; branch_addr = {pc_i[31:28],instruction[25:0],2'b00}; 
 			                   aluop_o = `EXE_ADD_OP; end
-		  	 `EXE_SW:   begin i_sw    = 1; aluop_o = `EXE_ADD_OP; end
-        `EXE_LW:   begin i_lw    = 1; aluop_o = `EXE_ADD_OP; end
+		  	  `EXE_SW:   begin i_sw    = 1; aluop_o = `EXE_ADD_OP; end
+              `EXE_LW:   begin i_lw    = 1; aluop_o = `EXE_ADD_OP; end
 			
-        `EXE_BEQ:  begin i_beq   = 1; aluop_o = `EXE_SUB_OP; 
+              `EXE_BEQ:  begin i_beq   = 1; aluop_o = `EXE_SUB_OP; 
                          branch_addr = pc_i + 4'h4 + {immediate_16,2'b00};end
 			  `EXE_BNE:  begin i_bne   = 1; aluop_o = `EXE_SUB_OP; 
 			                   branch_addr = pc_i + 4'h4 + {immediate_16,2'b00};end
 			  
-        `EXE_HALT: begin i_halt  = 1;                        end
+              `EXE_HALT: begin i_halt  = 1;                        end
         
         6'b000000: begin
          case(func)

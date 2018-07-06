@@ -11,7 +11,7 @@ module pc_reg(
 );
 
 
-always @(posedge clk or negedge rst)
+always @(posedge clk)
   begin
 	if(rst==`RstEnable) begin
 		ce <=`ChipDisable;		//复位时指令存储器禁用

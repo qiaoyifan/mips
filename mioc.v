@@ -57,7 +57,7 @@ module mioc(
         wiodata <= wm_idata_i;
       end
       4'b0010: begin //mw_ctl_i
-        memwenb_o <= 1'b0;   //write
+        memwenb_o <= 1'b1;   //write
         mem_ce <= `ChipEnable;
         memaddr_o <= m_iaddr_i;
         wrmemdata_o <= wm_idata_i;
@@ -65,7 +65,7 @@ module mioc(
         
       end
       4'b0001: begin //mr_ctl_i
-        memwenb_o <= 1'b1;   //read 
+        memwenb_o <= 1'b0;   //read 
         mem_ce <= `ChipEnable;
         memaddr_o <= m_iaddr_i;
         rm_idata <= rmemdata_i;

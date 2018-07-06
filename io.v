@@ -13,8 +13,8 @@ module io(
           output reg[`RegBus] Seg, //0xFFFFF000
           output reg[15:0] Led, //0xFFFFF004
           
-          input wire[1:0] Sel, //0xFFFFF008
-          input wire[`RegBus] Button //0xFFFFF012
+          input wire[15:0] Sel, //0xFFFFF008
+          input wire[15:0] Button //0xFFFFF012
 );
 
 //read
@@ -23,21 +23,20 @@ module io(
   begin
     if(rst == `RstEnable)
       begin
-        rdata <= `ZeroWord;
+        rdata = `ZeroWord;
       end
     else
       begin
         if( ce == `ChipEnable )
           begin
             case(addr)
-            
               `KEY: 
               begin
-                  rdata <= {16{Sel}};
+                  rdata = {Sel,Sel};
               end
               `BUTTON: 
               begin
-                  rdata <= Button;
+                  rdata = Button;
               end
             endcase
           end
@@ -51,17 +50,17 @@ module io(
   begin
     if(rst == `RstEnable)
       begin
-        Seg <= `ZeroWord;
-        Led <= `ZeroWord;
+        Seg = `ZeroWord;
+        Led = `ZeroWord;
       end
       else if( ce == `ChipEnable )
         begin
           case(addr)
             `SEG: begin
-                Seg <= wdata;
+                Seg = wdata;
             end
             `LED: begin
-                Led <= wdata[15:0];
+                Led = wdata[15:0];
             end
           endcase
         end
